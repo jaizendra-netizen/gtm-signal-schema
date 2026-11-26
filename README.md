@@ -1,0 +1,53 @@
+# gtm-signal-schema
+
+A JSON Schema for **buying-signal records** (a hiring, funding, technology, engagement or leadership change at one company),
+plus a zero-dependency Node.js validator, so signals pulled from different providers land in one consistent shape before they reach a CRM or a sequencer.
+
+```bash
+node bin/gtm-signal-validate.js examples/signals.jsonl
+# 2 of 2 records valid
+
+node bin/gtm-signal-validate.js examples/invalid.jsonl
+# FAIL record 1.type: must be one of hiring, funding, technology, engagement, leadership, other
+# FAIL record 1.detected_at: not an RFC 3339 date-time
+# ...
+# 0 of 1 records valid
+```
+
+The CLI reads one signal, a JSON array, or one JSON object per line (JSONL), and exits 1 when any record fails, so it can gate an import job.
+Node 18 or newer, no `npm install` needed.
+
+## The record
+
+| Field | Required | Notes |
+|---|---|---|
+| `signal_id` | yes | stable id from your own pipeline |
+| `type` | yes | `hiring`, `funding`, `technology`, `engagement`, `leadership` or `other` |
+| `company.domain` | yes | lower-case registrable domain; `company.name` and `company.linkedin_url` optional |
+| `detected_at` | yes | RFC 3339 date-time |
+| `source.provider` | yes | where you got it; `source.url` optional |
+| `summary` | no | up to 280 characters |
+| `confidence` | no | number from 0 to 1 |
+| `evidence` | no | list of strings, at least one when present |
+| `status` | no | `new`, `reviewed`, `used` or `discarded` |
+
+The file is standard draft 2020-12 JSON Schema (`schema/signal.schema.json`); the examples validate identically under Ajv.
+The bundled validator implements only the keywords this schema uses; use Ajv or another full validator if you extend it.
+
+## Where signals come from
+
+The OneGTMLab directory reviews five signal and intent APIs (Clearcue, Jungler, OpenFunnel, PredictLeads and TheirStack), covering hiring, funding,
+technology and engagement changes, each read from the vendor's own pricing page and docs:
+[Signal and intent APIs](https://www.onegtmlab.dev/tool-directory/signals).
+Glossary background: [buying signals](https://www.onegtmlab.dev/glossary/buying-signals),
+[trigger events](https://www.onegtmlab.dev/glossary/trigger-event) and [intent data](https://www.onegtmlab.dev/glossary/intent-data).
+
+## Test
+
+```bash
+npm test
+```
+
+## Licence
+
+MIT. Made by [OneGTMLab](https://www.onegtmlab.dev), GTM engineering for B2B teams.

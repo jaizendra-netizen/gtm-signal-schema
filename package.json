@@ -1,0 +1,10 @@
+{
+  "name": "gtm-signal-schema",
+  "version": "0.1.0",
+  "description": "A JSON Schema for buying-signal records (hiring, funding, technology, engagement) and a zero-dependency validator CLI",
+  "license": "MIT",
+  "type": "module",
+  "bin": { "gtm-signal-validate": "bin/gtm-signal-validate.js" },
+  "scripts": { "test": "node --test test/" },
+  "engines": { "node": ">=18" }
+}
