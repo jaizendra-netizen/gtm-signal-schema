@@ -1,0 +1,10 @@
+{
+  "name": "gtm-signal-schema",
+  "description": "JSON Schema for GTM buying-signal records (hiring, funding, technology, engagement) plus a zero-dependency Node.js validator CLI.",
+  "sidebar": [
+    {
+      "title": "Overview",
+      "href": "/"
+    }
+  ]
+}

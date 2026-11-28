@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gtm-signal-schema | OneGTMLab</title>
+<meta name="description" content="JSON Schema for GTM buying-signal records (hiring, funding, technology, engagement) plus a zero-dependency Node.js validator CLI.">
+<style>body{font:16px/1.6 system-ui,sans-serif;max-width:46rem;margin:2rem auto;padding:0 1rem;color:#1b1f23}pre{background:#f6f8fa;padding:1rem;overflow:auto}code{background:#f6f8fa;padding:.1em .3em}table{border-collapse:collapse}td,th{border:1px solid #d0d7de;padding:.3rem .6rem}</style>
+</head><body>
+<main>
+<h1 dir="auto">gtm-signal-schema</h1>
+<p dir="auto">A JSON Schema for <strong>buying-signal records</strong> (a hiring, funding, technology, engagement or leadership change at one company),<br>
+plus a zero-dependency Node.js validator, so signals pulled from different providers land in one consistent shape before they reach a CRM or a sequencer.</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">node bin/gtm-signal-validate.js examples/signals.jsonl
+<span class="pl-c"><span class="pl-c">#</span> 2 of 2 records valid</span>
+
+node bin/gtm-signal-validate.js examples/invalid.jsonl
+<span class="pl-c"><span class="pl-c">#</span> FAIL record 1.type: must be one of hiring, funding, technology, engagement, leadership, other</span>
+<span class="pl-c"><span class="pl-c">#</span> FAIL record 1.detected_at: not an RFC 3339 date-time</span>
+<span class="pl-c"><span class="pl-c">#</span> ...</span>
+<span class="pl-c"><span class="pl-c">#</span> 0 of 1 records valid</span></pre></div>
+<p dir="auto">The CLI reads one signal, a JSON array, or one JSON object per line (JSONL), and exits 1 when any record fails, so it can gate an import job.<br>
+Node 18 or newer, no <code class="notranslate">npm install</code> needed.</p>
+<h2 dir="auto">The record</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">signal_id</code></td>
+<td>yes</td>
+<td>stable id from your own pipeline</td>
+</tr>
+<tr>
+<td><code class="notranslate">type</code></td>
+<td>yes</td>
+<td><code class="notranslate">hiring</code>, <code class="notranslate">funding</code>, <code class="notranslate">technology</code>, <code class="notranslate">engagement</code>, <code class="notranslate">leadership</code> or <code class="notranslate">other</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">company.domain</code></td>
+<td>yes</td>
+<td>lower-case registrable domain; <code class="notranslate">company.name</code> and <code class="notranslate">company.linkedin_url</code> optional</td>
+</tr>
+<tr>
+<td><code class="notranslate">detected_at</code></td>
+<td>yes</td>
+<td>RFC 3339 date-time</td>
+</tr>
+<tr>
+<td><code class="notranslate">source.provider</code></td>
+<td>yes</td>
+<td>where you got it; <code class="notranslate">source.url</code> optional</td>
+</tr>
+<tr>
+<td><code class="notranslate">summary</code></td>
+<td>no</td>
+<td>up to 280 characters</td>
+</tr>
+<tr>
+<td><code class="notranslate">confidence</code></td>
+<td>no</td>
+<td>number from 0 to 1</td>
+</tr>
+<tr>
+<td><code class="notranslate">evidence</code></td>
+<td>no</td>
+<td>list of strings, at least one when present</td>
+</tr>
+<tr>
+<td><code class="notranslate">status</code></td>
+<td>no</td>
+<td><code class="notranslate">new</code>, <code class="notranslate">reviewed</code>, <code class="notranslate">used</code> or <code class="notranslate">discarded</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The file is standard draft 2020-12 JSON Schema (<code class="notranslate">schema/signal.schema.json</code>); the examples validate identically under Ajv.<br>
+The bundled validator implements only the keywords this schema uses; use Ajv or another full validator if you extend it.</p>
+<h2 dir="auto">Where signals come from</h2>
+<p dir="auto">The OneGTMLab directory reviews five signal and intent APIs (Clearcue, Jungler, OpenFunnel, PredictLeads and TheirStack), covering hiring, funding,<br>
+technology and engagement changes, each read from the vendor's own pricing page and docs:<br>
+<a href="https://www.onegtmlab.dev/tool-directory/signals">Signal and intent APIs</a>.<br>
+Glossary background: <a href="https://www.onegtmlab.dev/glossary/buying-signals">buying signals</a>,<br>
+<a href="https://www.onegtmlab.dev/glossary/trigger-event">trigger events</a> and <a href="https://www.onegtmlab.dev/glossary/intent-data">intent data</a>.</p>
+<h2 dir="auto">Test</h2>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">npm <span class="pl-c1">test</span></pre></div>
+<h2 dir="auto">Licence</h2>
+<p dir="auto">MIT. Made by <a href="https://www.onegtmlab.dev">OneGTMLab</a>, GTM engineering for B2B teams.</p>
+</main>
+<footer><p>Source: <a href="https://github.com/jaizendra-netizen/gtm-signal-schema">github.com/jaizendra-netizen/gtm-signal-schema</a>. Maintained by <a href="https://www.onegtmlab.dev">OneGTMLab</a>.</p></footer>
+</body></html>
